@@ -12,7 +12,6 @@ class StoreViewer extends React.Component {
 
         axios.get('https://api.jotform.com/form/92382295350964/submissions?apikey=a253771ef3dcbe5c953f78dc816f3a67&orderby=id').then(response => {
 
-            //   console.log(response.data.content)
             this.props.add(response.data.content)
         })
 
