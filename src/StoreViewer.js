@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
-import CodoContainer from './CodoContainer.js';
 import { addAction } from './reduxSrc/actions';
 import { Table } from 'antd';
 import 'antd/dist/antd.css';
@@ -42,16 +41,18 @@ class StoreViewer extends React.Component {
 
         return (
             <div>
-                <h2>To Do</h2>
-                <Table dataSource={this.props.listToDo} columns={columns} />
-                
-            
-                <h2>Doing</h2>
-                <Table dataSource={this.props.listDoing} columns={columns} />
-               
-               
-                <h2>Done</h2>
-                <Table dataSource={this.props.listDone} columns={columns} />
+                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+
+                    <h2>To Do</h2>
+                    <h2>Doing</h2>
+                    <h2>Done</h2>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+
+                    <Table dataSource={this.props.listToDo} columns={columns} />
+                    <Table dataSource={this.props.listDoing} columns={columns} />
+                    <Table dataSource={this.props.listDone} columns={columns} />
+                </div>
             </div>
         )
     }
