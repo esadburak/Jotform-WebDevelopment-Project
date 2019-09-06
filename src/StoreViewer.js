@@ -1,77 +1,43 @@
-import axios from 'axios';
 import React from 'react';
 import { connect } from 'react-redux';
-import { addAction } from './reduxSrc/actions';
-import { Table } from 'antd';
+import { addAction, changeList } from './reduxSrc/actions';
 import 'antd/dist/antd.css';
+import SortableList  from './SortableList.js';
 
 class StoreViewer extends React.Component {
     constructor(props) {
         super(props)
-
-        axios.get('https://api.jotform.com/form/92382295350964/submissions?apikey=a253771ef3dcbe5c953f78dc816f3a67&orderby=id').then(response => {
-
-            this.props.add(response.data.content)
-        })
-
     }
 
 
 
+    componentDidMount() {
+
+        this.props.add()
+        setInterval(this.props.add, 30000);
+
+    }
 
 
 
     render() {
 
+        return (<div>
 
-        const columns = [
-            {
-                title: 'Description',
-                dataIndex: 'Desc',
-                key: 'Desc',
-            },
-            {
-                title: 'Title',
-                dataIndex: 'Title',
-                key: 'Title',
-            },
-        ];
-        console.log(columns)
-        let id = 0;
+            <SortableList>
+            </SortableList>
 
-        return (
-            <div>
-                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-
-                    <h2>To Do</h2>
-                    <h2>Doing</h2>
-                    <h2>Done</h2>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-
-                    <Table dataSource={this.props.listToDo} columns={columns} />
-                    <Table dataSource={this.props.listDoing} columns={columns} />
-                    <Table dataSource={this.props.listDone} columns={columns} />
-                </div>
-            </div>
+        </div>
         )
     }
 }
 
 
-const mapStateToProps = (state) => {
-    //  console.log('asd', state.data, state.data.listToDo)
-    return {
-        listToDo: [] && state.data.listToDo,
-        listDoing: [] && state.data.listDoing,
-        listDone: [] && state.data.listDone
-    }
-}
 
 const mapDispatchToProps = ({
     add: addAction
 })
-const ConnectedStoreViewer = connect(mapStateToProps, mapDispatchToProps)(StoreViewer);
+const ConnectedStoreViewer = connect(null, mapDispatchToProps)(StoreViewer);
 export default ConnectedStoreViewer;
 
 
@@ -80,4 +46,10 @@ export default ConnectedStoreViewer;
 this.state.result.map(pokes=>
     <PokeCard key={pokes.name} name={pokes.name}> </PokeCard>
 )
+
+            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                <MyTable type='table' tableName={'To Do'} dataSource={this.props.listToDo} columns={columns} />
+                <MyTable type='table' tableName={'Doing'} dataSource={this.props.listDoing} columns={columns} />
+                <MyTable type='table' tableName={'Done'} dataSource={this.props.listDone} columns={columns} />
+            </div>
 */

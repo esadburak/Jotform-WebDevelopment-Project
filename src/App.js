@@ -10,7 +10,3 @@ export default class App extends React.Component{
     );
   }
 }
-//<StoreViewer />
-
-//<InputPlace />
-//<AddButton />
