@@ -5,23 +5,28 @@ export const actionTypes = {
     ADD_LIST: 'ADD_LIST',
     DRAG: 'DRAG',
     CHANGE: 'CHANGE',
-    DROP: 'DROP'
+    DELETE: 'DELETE',
+    DROP: 'DROP',
+    ORDER: 'ORDER'
 }
 const loaderF = () => {
 
     return (dispatch, getStore) => {
         let obj
-        axios.get('https://api.jotform.com/form/92382295350964/submissions?apikey=a253771ef3dcbe5c953f78dc816f3a67&orderby=id')
-            .then(response => {
-                obj = response.data.content
+        console.log(getStore().data.refreshable)
+        if (getStore().data.refreshable)
 
-                let contentAnswers = obj//.map(contents=> {return (contents.id,contents.answers)});
-                dispatch({
-                    type: actionTypes.ADD_LIST,
-                    payload: contentAnswers
+            axios.get('https://api.jotform.com/form/92382295350964/submissions?apikey=a253771ef3dcbe5c953f78dc816f3a67&orderby=id')
+                .then(response => {
+                    obj = response.data.content
+
+                    let contentAnswers = obj//.map(contents=> {return (contents.id,contents.answers)});
+                    dispatch({
+                        type: actionTypes.ADD_LIST,
+                        payload: contentAnswers
+                    })
+
                 })
-
-            })
     }
 }
 
@@ -30,23 +35,35 @@ export const addAction = () => {
 }
 
 
-export const dragAction = (obj) => {
+
+export const dragAction = () => {
     return (dispatch, getStore) => {
-        let contentAnswers = obj//.map(contents=> {return (contents.id,contents.answers)});
+        console.log('DARG')
         dispatch({
             type: actionTypes.DRAG,
-            payload: contentAnswers
         })
     }
 }
 
-export const dropAction = (obj) => {
+export const dropAction = () => {
     return (dispatch, getStore) => {
-        let contentAnswers = obj//.map(contents=> {return (contents.id,contents.answers)});
+        
+        console.log('drop')
         dispatch({
             type: actionTypes.DROP,
-            payload: contentAnswers
         })
+    }
+}
+
+
+export const deleteAction = (sel, ff) => {
+    return (dispatch, getStore) => {
+
+        axios.delete('https://api.jotform.com/submission/' + sel + '?apikey=06a98bca3409d21345b9cdb8872a6222')
+            .then(response => {
+
+                ff()
+            })
     }
 }
 
@@ -57,16 +74,10 @@ export const changeList = (sel, list, ff) => {
     }
     return (dispatch, getStore) => {
 
-        dispatch({
-            type: actionTypes.CHANGE,
-            payload: obj
-        })
-
         axios.post('https://api.jotform.com/submission/' + sel + '?apikey=06a98bca3409d21345b9cdb8872a6222',
             {
                 5: list
             }).then(response => {
-
                 ff()
             })
 
@@ -74,3 +85,24 @@ export const changeList = (sel, list, ff) => {
 }
 
 
+export const orderAction = (items, flag, ff, list) => {
+    return (dispatch, getStore) => {
+        dispatch({
+            type: actionTypes.ORDER,
+            payload: items,
+            l: list
+        })
+        flag.forEach((x, n) => {
+            if (x != 0)
+                axios.post('https://api.jotform.com/submission/' + items[n] + '?apikey=06a98bca3409d21345b9cdb8872a6222',
+                    {
+                        7: n
+                    }).then(e => { console.log(e); ff() })
+
+
+
+        });
+
+
+    }
+}
