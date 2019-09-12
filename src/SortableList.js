@@ -2,11 +2,12 @@ import uniqueId from 'lodash/uniqueId';
 import React from 'react';
 import Sortable from 'react-sortablejs';
 import { connect } from 'react-redux';
-import { addAction, dragAction, dropAction } from './reduxSrc/actions';
+import { addAction, dragAction, dropAction, editAction } from './reduxSrc/actions';
 import { deleteAction } from './reduxSrc/actions';
 import { changeList } from './reduxSrc/actions';
 import { orderAction } from './reduxSrc/actions';
 import { Card, Icon } from 'antd';
+import { Form, Input, Button, Radio } from 'antd';
 import Modal from 'react-modal';
 
 
@@ -37,6 +38,7 @@ class SortableList extends React.Component {
 
 
         this.state = {
+            formLayout: 'horizontal',
             modalIsOpen: false,
             formID: -1
         };
@@ -44,6 +46,22 @@ class SortableList extends React.Component {
         this.openModal = this.openModal.bind(this);
         this.afterOpenModal = this.afterOpenModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+    handleSubmit(e){
+        console.log(this.state.formID)
+        console.log(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.lastChild[0].value)
+        console.log(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.lastChild[1].value)
+        this.props.edit({
+            sel:this.state.formID,
+            title:e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.lastChild[0].value,
+            desc:e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.lastChild[1].value
+            
+        },this.props.add)
+        this.closeModal()
+    
+    
     }
 
     openModal(e) {
@@ -65,7 +83,25 @@ class SortableList extends React.Component {
 
 
 
+    handleFormLayoutChange = e => {
+        this.setState({ formLayout: e.target.value });
+    };
     render() {
+        const { formLayout } = this.state;
+        const formItemLayout =
+            formLayout === 'horizontal'
+                ? {
+                    labelCol: { span: 4 },
+                    wrapperCol: { span: 14 },
+                }
+                : null;
+        const buttonItemLayout =
+            formLayout === 'horizontal'
+                ? {
+                    wrapperCol: { span: 14, offset: 4 },
+                }
+                : null;
+
         const deleteSub = e => {
             //   console.log(e.target.parentNode.parentNode.parentNode.parentNode.dataset['id'])
             this.props.deleteSubmission(e.target.parentNode.parentNode.parentNode.parentNode.dataset['id'], this.props.add)
@@ -112,22 +148,26 @@ class SortableList extends React.Component {
         ));
 
 
-        const handleSubmit = (e) => console.log(e)
+
         const FormEdit = () => {
-            console.log(this.state.formID)
             if (this.state.formID != -1) {
 
                 return <div><h2 ref={subtitle => this.subtitle = subtitle}>{this.props.data[this.state.formID].answers[4].answer}</h2>
                     {this.props.data[this.state.formID].answers[3].answer}
-                    <form onSubmit={this.handleSubmit}>
-                        <label >
-                            {'Title:'}
-                            <input type="text" name="title" value={this.props.data[this.state.formID].answers[4].answer}/>
-                            {'Description:'}
-                            <input type="text" name="desc" value={this.props.data[this.state.formID].answers[3].answer}/>
-                        </label>
-                        <input type="submit" value="Submit" />
-                    </form>
+                    <Form layout={formLayout}>
+                        <Form.Item label="" {...formItemLayout}>
+
+                        </Form.Item>
+                        <Form.Item style={{ width: 500 }} label="Title" {...formItemLayout}>
+                            <Input placeholder={this.props.data[this.state.formID].answers[4].answer} />
+                        </Form.Item>
+                        <Form.Item label="Description" {...formItemLayout}>
+                            <Input placeholder={this.props.data[this.state.formID].answers[3].answer} />
+                        </Form.Item>
+                        <Form.Item {...buttonItemLayout}>
+                            <Button onClick={this.handleSubmit} type="primary">Submit</Button>
+                        </Form.Item>
+                    </Form>
                 </div>
 
             }
@@ -271,6 +311,7 @@ const mapDispatchToProps = ({
     order: orderAction,
     drag: dragAction,
     drop: dropAction,
+    edit: editAction,
 
     change: changeList
 })

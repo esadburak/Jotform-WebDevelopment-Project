@@ -7,6 +7,7 @@ export const actionTypes = {
     CHANGE: 'CHANGE',
     DELETE: 'DELETE',
     DROP: 'DROP',
+    EDIT: 'EDIT',
     ORDER: 'ORDER'
 }
 const loaderF = () => {
@@ -38,17 +39,34 @@ export const addAction = () => {
 
 export const dragAction = () => {
     return (dispatch, getStore) => {
-        console.log('DARG')
         dispatch({
             type: actionTypes.DRAG,
         })
     }
 }
 
+
+export const editAction = (obj,ff) => {
+    return (dispatch, getStore) => {
+        dispatch({
+            type: actionTypes.EDIT,
+            payload: obj
+        })
+        console.log('edit')
+
+        axios.post('https://api.jotform.com/submission/' + obj.sel + '?apikey=06a98bca3409d21345b9cdb8872a6222',
+            {
+                4: obj.title,
+                3: obj.desc
+            }).then(response => {
+                ff()
+            })
+    }
+}
+
 export const dropAction = () => {
     return (dispatch, getStore) => {
         
-        console.log('drop')
         dispatch({
             type: actionTypes.DROP,
         })

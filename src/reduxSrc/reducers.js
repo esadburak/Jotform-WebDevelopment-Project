@@ -125,6 +125,18 @@ function listReducers(state = initialState, action) {
             return newState
         }
 
+
+        case actionTypes.EDIT: {
+            let newState = Object.assign({}, state);
+            let obj = action.payload
+            console.log('AA',newState.alldata[obj.sel].answers[3].answer,obj.desc)
+            console.log('bb',newState.alldata[obj.sel].answers[4].answer,obj.title)
+            newState.alldata[obj.sel].answers[3].answer=obj.desc
+            newState.alldata[obj.sel].answers[4].answer=obj.title
+            console.log(newState)
+            return newState
+        }
+
         default:
             return state;
     }
