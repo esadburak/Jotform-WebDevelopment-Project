@@ -11,7 +11,7 @@ const initialState = {
 }
 
 function listReducers(state = initialState, action) {
-
+    console.log('ADD')
     switch (action.type) {
         case actionTypes.ADD_LIST || actionTypes.EDIT: {
             const newState = Object.assign({}, state);
@@ -33,6 +33,8 @@ function listReducers(state = initialState, action) {
             newState.listDoing = newListDoing
             newState.listDone = newListDone
       //      console.log('Red ', newState)
+            if(Object.entries(newState).toString() === Object.entries(state).toString())return state
+            console.log(newState.alldata)
             return newState
         }
 

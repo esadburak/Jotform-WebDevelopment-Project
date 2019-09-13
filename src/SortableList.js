@@ -9,6 +9,7 @@ import { orderAction } from './reduxSrc/actions';
 import { Card, Icon } from 'antd';
 import { Form, Input, Button, Radio } from 'antd';
 import Modal from 'react-modal';
+import Disqus from './Disqus';
 
 
 const customStyles = {
@@ -49,19 +50,19 @@ class SortableList extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
 
     }
-    handleSubmit(e){
+    handleSubmit(e) {
         console.log(this.state.formID)
-        console.log(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.lastChild[0].value)
-        console.log(e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.lastChild[1].value)
+        console.log(e.target.parentNode.parentNode.parentNode.parentNode.parentNode[0].value)
+        console.log(e.target.parentNode.parentNode.parentNode.parentNode.parentNode[1].value)
         this.props.edit({
-            sel:this.state.formID,
-            title:e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.lastChild[0].value,
-            desc:e.target.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.lastChild[1].value
-            
-        },this.props.add)
+            sel: this.state.formID,
+            title: e.target.parentNode.parentNode.parentNode.parentNode.parentNode[0].value,
+            desc: e.target.parentNode.parentNode.parentNode.parentNode.parentNode[1].value
+
+        }, this.props.add)
         this.closeModal()
-    
-    
+
+
     }
 
     openModal(e) {
@@ -104,6 +105,7 @@ class SortableList extends React.Component {
 
         const deleteSub = e => {
             //   console.log(e.target.parentNode.parentNode.parentNode.parentNode.dataset['id'])
+            this.state.formID = -1
             this.props.deleteSubmission(e.target.parentNode.parentNode.parentNode.parentNode.dataset['id'], this.props.add)
         }
 
@@ -168,6 +170,7 @@ class SortableList extends React.Component {
                             <Button onClick={this.handleSubmit} type="primary">Submit</Button>
                         </Form.Item>
                     </Form>
+                    <Disqus/>
                 </div>
 
             }
@@ -176,6 +179,9 @@ class SortableList extends React.Component {
 
         return (
             <div>
+
+                
+
                 <Modal
                     isOpen={this.state.modalIsOpen}
                     onAfterOpen={this.afterOpenModal}
@@ -185,7 +191,7 @@ class SortableList extends React.Component {
                 >
                     {FormEdit()}
                     <button onClick={this.closeModal}>close</button>
-
+                    
 
                 </Modal>
 
@@ -286,6 +292,7 @@ class SortableList extends React.Component {
                             </Sortable>
                         </div>
                     </div>
+
                 </div>
 
 
