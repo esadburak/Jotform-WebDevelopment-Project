@@ -9,7 +9,7 @@ import { orderAction } from './reduxSrc/actions';
 import { Card, Icon } from 'antd';
 import { Form, Input, Button, Radio } from 'antd';
 import Modal from 'react-modal';
-import Disqus from './Disqus';
+import Disquss from './Disquss';
 
 
 const customStyles = {
@@ -115,34 +115,40 @@ class SortableList extends React.Component {
 
 
         const Header = (str) => {
-            return <div style={{ display: 'flex', justifyContent: 'space-around' }} className="title"><font size='8'>{str}</font></div>
+            return <div style={{ display: 'flex', justifyContent: 'space-around' }} className="title"><font size='6'>{str}</font></div>
         }
 
-
+        //<p>{this.props.data[val].answers[3].answer}</p>
 
 
         const groupLeft = this.props.listToDo.map((val, key) => (
-            <div key={uniqueId()} data-id={val}>
-                <Card title={this.props.data[val].answers[4].answer} bordered={true} style={{ width: 300 }}>
-                    <p>{this.props.data[val].answers[3].answer}</p>
+            <div style={{ margin: '10px' }} key={uniqueId()} data-id={val}>
+                <Card headStyle={{ background: '#f09819', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} 
+                bodyStyle={{ background: '#eaeaea', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+                    title={this.props.data[val].answers[4].answer} bordered={true} style={{ width: 300, borderRadius: 20 }}>
+
                     <Icon type="delete" key="delete" onClick={deleteSub} />
                     <Icon formID={val} type="edit" key="edit" onClick={e => { this.openModal(val) }} />
                 </Card>
             </div>
         ));
         const groupMid = this.props.listDoing.map((val, key) => (
-            <div key={uniqueId()} data-id={val}>
-                <Card title={this.props.data[val].answers[4].answer} bordered={true} style={{ width: 300 }}>
-                    <p>{this.props.data[val].answers[3].answer}</p>
+            <div style={{ margin: '10px' }} key={uniqueId()} data-id={val}>
+                <Card headStyle={{ background: '#f09819', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} 
+                bodyStyle={{ background: '#eaeaea', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+                    title={this.props.data[val].answers[4].answer} bordered={true} style={{ width: 300, borderRadius: 20 }}>
+
                     <Icon type="delete" key="delete" onClick={deleteSub} />
                     <Icon formID={val} type="edit" key="edit" onClick={e => { this.openModal(val) }} />
                 </Card>
             </div>
         ));
         const groupRight = this.props.listDone.map((val, key) => (
-            <div key={uniqueId()} data-id={val}>
-                <Card title={this.props.data[val].answers[4].answer} bordered={true} style={{ width: 300 }}>
-                    <p>{this.props.data[val].answers[3].answer}</p>
+            <div style={{ margin: '10px' }} key={uniqueId()} data-id={val}>
+                <Card headStyle={{ background: '#f09819', borderTopLeftRadius: 20, borderTopRightRadius: 20 }} 
+                bodyStyle={{ background: '#eaeaea', borderBottomLeftRadius: 20, borderBottomRightRadius: 20 }}
+                    title={this.props.data[val].answers[4].answer} bordered={true} style={{ width: 300, borderRadius: 20 }}>
+
                     <Icon type="delete" key="delete" onClick={deleteSub} />
                     <Icon formID={val} type="edit" key="edit" onClick={e => { this.openModal(val) }} />
                 </Card>
@@ -152,55 +158,57 @@ class SortableList extends React.Component {
 
 
         const FormEdit = () => {
-            if (this.state.formID != -1) {
+            if (this.state.formID != -1 && this.state.modalIsOpen) {
 
-                return <div><h2 ref={subtitle => this.subtitle = subtitle}>{this.props.data[this.state.formID].answers[4].answer}</h2>
-                    {this.props.data[this.state.formID].answers[3].answer}
-                    <Form layout={formLayout}>
-                        <Form.Item label="" {...formItemLayout}>
+                return <div>
 
-                        </Form.Item>
-                        <Form.Item style={{ width: 500 }} label="Title" {...formItemLayout}>
-                            <Input placeholder={this.props.data[this.state.formID].answers[4].answer} />
-                        </Form.Item>
-                        <Form.Item label="Description" {...formItemLayout}>
-                            <Input placeholder={this.props.data[this.state.formID].answers[3].answer} />
-                        </Form.Item>
-                        <Form.Item {...buttonItemLayout}>
-                            <Button onClick={this.handleSubmit} type="primary">Submit</Button>
-                        </Form.Item>
-                    </Form>
-                    <Disqus/>
+
+                    <Modal
+                        isOpen={this.state.modalIsOpen}
+                        onAfterOpen={this.afterOpenModal}
+                        onRequestClose={this.closeModal}
+                        style={customStyles}
+                        contentLabel="Example Modal"
+                    >
+                        <h2 ref={subtitle => this.subtitle = subtitle}>{this.props.data[this.state.formID].answers[4].answer}</h2>
+                        <p style={{ width: '500px' }}>{this.props.data[this.state.formID].answers[3].answer}</p>
+                        <Form layout={formLayout}>
+                            <Form.Item label="" {...formItemLayout}>
+
+                            </Form.Item>
+                            <Form.Item style={{ width: 500 }} label="Title" {...formItemLayout}>
+                                <Input placeholder={this.props.data[this.state.formID].answers[4].answer} />
+                            </Form.Item>
+                            <Form.Item label="Description" {...formItemLayout}>
+                                <Input placeholder={this.props.data[this.state.formID].answers[3].answer} />
+                            </Form.Item>
+                            <Form.Item {...buttonItemLayout}>
+                                <Button onClick={this.handleSubmit} type="primary">Submit</Button>
+                            </Form.Item>
+                        </Form>
+                        <Disquss threadID={this.state.formID} />
+                        <button onClick={this.closeModal}>close</button>
+
+
+                    </Modal>
+
                 </div>
 
             }
-            return <div>asd</div>
         }
 
         return (
             <div>
 
-                
 
-                <Modal
-                    isOpen={this.state.modalIsOpen}
-                    onAfterOpen={this.afterOpenModal}
-                    onRequestClose={this.closeModal}
-                    style={customStyles}
-                    contentLabel="Example Modal"
-                >
-                    {FormEdit()}
-                    <button onClick={this.closeModal}>close</button>
-                    
-
-                </Modal>
+                {FormEdit()}
 
 
                 <div>
 
                     <div className="row" style={{ display: 'flex', justifyContent: 'space-around' }} >
-                        <div className="col-sm-6">{Header("To Do")}
-                            <Sortable
+                        <div style={{ margin: '10px', background: '#cacaca' }} className="col-sm-6">{Header("TO DO")}
+                            <Sortable style={{ margin: '10px' }}
                                 options={{
                                     sort: true,
                                     animation: 150,
@@ -231,8 +239,8 @@ class SortableList extends React.Component {
                                 {groupLeft}
                             </Sortable>
                         </div>
-                        <div className="col-sm-6">{Header("Doing")}
-                            <Sortable
+                        <div style={{ margin: '10px', background: '#cacaca', height: '1000px' }} className="col-sm-6">{Header("DOING")}
+                            <Sortable style={{ margin: '10px' }}
                                 options={{
                                     sort: true,
                                     animation: 150,
@@ -262,8 +270,8 @@ class SortableList extends React.Component {
                             </Sortable>
                         </div>
 
-                        <div className="col-sm-6">{Header("Done")}
-                            <Sortable
+                        <div style={{ margin: '10px', background: '#cacaca' }} className="col-sm-6">{Header("DONE")}
+                            <Sortable style={{ margin: '10px' }}
                                 options={{
                                     sort: true,
                                     animation: 150,
@@ -324,5 +332,4 @@ const mapDispatchToProps = ({
 })
 const ConnectedSortableList = connect(mapStateToProps, mapDispatchToProps)(SortableList);
 export default ConnectedSortableList;
-
 

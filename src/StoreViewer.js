@@ -14,7 +14,7 @@ class StoreViewer extends React.Component {
     componentDidMount() {
 
         this.props.add()
-        setInterval(this.props.add, 3000);
+        setInterval(this.props.add, 1000);
 
     }
 
